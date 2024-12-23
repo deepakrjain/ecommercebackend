@@ -32,6 +32,18 @@ router.post('/verify-email', async (req, res) => {
   }
 });
 
+const nodemailer = require('nodemailer');
+router.post('/register', async (req, res) => {
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
+    const transporter = nodemailer.createTransport({ /* SMTP Config */ });
+    await transporter.sendMail({
+        to: req.body.email,
+        subject: 'Email Verification',
+        text: `Your verification code is ${verificationCode}`,
+    });
+    res.send({ message: 'Verification email sent' });
+});
+
 router.post('/signup', async (req, res) => {
     try {
       const { name, email, password, phone } = req.body;

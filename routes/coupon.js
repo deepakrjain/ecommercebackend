@@ -162,4 +162,17 @@ router.post('/add', async (req, res) => {
   }
 });
 
+
+router.post('/create', async (req, res) => {
+  const coupon = new Coupon(req.body);
+  await coupon.save();
+  res.send({ message: 'Coupon created successfully', coupon });
+});
+
+router.post('/apply', async (req, res) => {
+  const coupon = await Coupon.findOne({ code: req.body.code });
+  if (!coupon) return res.status(404).send({ message: 'Invalid coupon' });
+  res.send({ message: 'Coupon applied successfully', discount: coupon.discount });
+});
+
 module.exports = router

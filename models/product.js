@@ -3,7 +3,7 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
-  images: [{ type: String }], // Array of image URLs
+  images: [{ type: String, required: true }],
   seller: { type: mongoose.Schema.Types.ObjectId, ref: 'Seller', required: true },
   stock: { type: Number, required: true },
   category: { type: String, required: true },
