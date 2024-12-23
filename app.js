@@ -11,7 +11,9 @@ const Seller = require('./models/seller');
 const adminAuthRoutes = require('./routes/adminauth'); 
 const cartRoutes = require('./routes/cart');
 const complaintsRoutes = require('./routes/complaints');
-const couponRoutes = require('./routes/coupon')
+const couponRoutes = require('./routes/coupon');
+const productRoutes = require('./routes/product');
+const shippingRoutes = require('./routes/shipping');
 const Product = require('./models/product');
 const crypto = require('crypto');
 require('dotenv').config();
@@ -36,7 +38,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
+      mongoUrl: 'mongodb://localhost:27017/mydatabase',
       collectionName: 'sessions',
     }),
     cookie: {
@@ -53,6 +55,8 @@ app.use('/admin', adminAuthRoutes);
 app.use('/cart', cartRoutes);
 app.use('/complaints', complaintsRoutes);
 app.use('/coupon',couponRoutes)
+app.use('/product', productRoutes);
+app.use('/shipping', shippingRoutes);
 
 // MongoDB Connection
 const uri = process.env.MONGO_URI;

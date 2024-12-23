@@ -21,6 +21,21 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+router.post('/checkout', async (req, res) => {
+  const { cartItems, totalPrice } = req.body;
+
+  let discount = 0;
+  let freeDelivery = false;
+
+  if (totalPrice > 499) {
+    discount = totalPrice * 0.1;
+    freeDelivery = true;
+  }
+
+  const finalPrice = totalPrice - discount;
+
+  res.json({ finalPrice, discount, freeDelivery });
+});
 
 // Add to Cart Route
 router.post('/addtocart', async (req, res) => {

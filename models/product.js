@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema({
-  name: String,
-  price: String,
-  img: String,
-  category: String,
-  rating: Number,
-  productId: { type: String, unique: true }, // Added productId field
-  inStockValue: Number, // Available stock value
-  soldStockValue: Number, // Number of items sold
-  visibility: { type: String, default: 'on' } // Visibility field with default 'on'
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  images: [{ type: String }], // Array of image URLs
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: 'Seller', required: true },
+  stock: { type: Number, required: true },
+  category: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const Product = mongoose.model('Product', productSchema);

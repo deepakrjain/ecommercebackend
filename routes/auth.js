@@ -2,7 +2,35 @@ const express = require('express');
 const User = require('../models/user');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 
+// Email verification route
+router.post('/verify-email', async (req, res) => {
+  const { email, userId } = req.body;
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+
+  const verificationLink = `http://yourwebsite.com/verify/${userId}`;
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Verify Your Email',
+    text: `Click on the following link to verify your email: ${verificationLink}`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.json({ message: 'Verification email sent.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error sending email.' });
+  }
+});
 
 router.post('/signup', async (req, res) => {
     try {

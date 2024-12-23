@@ -3,6 +3,15 @@ const bcrypt = require('bcrypt');
 const Seller = require('../models/seller'); // Adjust the path to your Seller schema
 const router = express.Router();
 
+const isAdmin = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    return next();
+  }
+  return res.status(403).json({ error: 'Access denied. Admins only.' });
+};
+
+module.exports = isAdmin;
+
 // Seller Login
 router.post('/login', async (req, res) => {
   try {
@@ -192,6 +201,26 @@ router.post('/logout', async (req, res) => {
       error: 'Error logging out',
       details: error.message
     });
+  }
+});
+
+
+router.get('/sellers', isAdmin, async (req, res) => {
+  try {
+    const sellers = await Seller.find();
+    res.json(sellers);
+  } catch (err) {
+    res.status(500).json({ error: 'Error fetching sellers.' });
+  }
+});
+
+router.delete('/seller/:id', isAdmin, async (req, res) => {
+  try {
+    const sellerId = req.params.id;
+    await Seller.findByIdAndDelete(sellerId);
+    res.json({ message: 'Seller removed successfully.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error deleting seller.' });
   }
 });
 
